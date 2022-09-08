@@ -12,6 +12,17 @@ type User struct {
 	Password string `json:"password"`
 }
 
+type UserDetails struct {
+	ID          int64  `json:"id"`
+	UserID      int64  `json:"user_id"`
+	Gender      string `json:"gender"`
+	Age         int    `json:"age"`
+	Address     string `json:"address"`
+	Pincode     int    `json:"pincode"`
+	IsPetsitter bool   `json:"is_petsitter"`
+	IsDogwalker bool   `json:"is_dogwalker"`
+}
+
 func (user *User) ValidateUser() *errors.RestErr {
 	user.Username = strings.TrimSpace(user.Username)
 	user.Email = strings.TrimSpace(user.Email)

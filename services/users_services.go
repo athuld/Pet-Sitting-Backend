@@ -69,3 +69,19 @@ func GetUserFromJwt(c *gin.Context) (*users.User, *errors.RestErr) {
 	}
 	return result, nil
 }
+
+func AddUserDetails(userDetails users.UserDetails) (*errors.RestErr){
+    err:= userDetails.AddDetails()
+    if err!=nil{
+        return err
+    }
+    return nil
+}
+
+func GetUserDetails(userId int64) (*users.UserDetails,*errors.RestErr){
+    result := &users.UserDetails{UserID: userId}
+    if err:= result.GetDetailsByID();err!=nil{
+        return nil,err
+    }
+    return result,nil
+}
