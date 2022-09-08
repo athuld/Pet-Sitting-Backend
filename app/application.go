@@ -15,7 +15,7 @@ func StartApplication() {
 	mapUrls()
 	router.Use(cors.New(cors.Config{
         AllowOrigins:     []string{"http://localhost:5173"},
-		AllowMethods:     []string{"GET","POST","PATCH"},
+		AllowMethods:     []string{"GET","POST","PATCH","DELETE"},
 		AllowHeaders:     []string{"Content-Type"},
 		ExposeHeaders:    []string{"Content-Length"},
 		AllowCredentials: true,
