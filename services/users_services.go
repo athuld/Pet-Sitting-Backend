@@ -87,8 +87,8 @@ func GetUserDetails(userId int64) (*users.UserDetails,*errors.RestErr){
     return result,nil
 }
 
-func FetchActiveRequestsByPincode(pincode int)(*[]sitterreq.SitterPetsUsers,*errors.RestErr){
-    request:= &users.UserDetails{Pincode: pincode}
+func FetchActiveRequestsByPincode(pincode int,userId int64)(*[]sitterreq.SitterPetsUsers,*errors.RestErr){
+    request:= &users.UserDetails{Pincode: pincode,UserID: userId}
     result,err := request.GetActiverRequestsByPinFromDB()
     if err!=nil{
         return nil,err

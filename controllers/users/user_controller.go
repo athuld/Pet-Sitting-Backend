@@ -113,7 +113,14 @@ func GetActiveRequestsFromPincode(c *gin.Context) {
 		c.JSON(err.Status, err)
 		return
 	}
-	result, getErr := services.FetchActiveRequestsByPincode(pincode)
+	user, jErr := services.GetUserFromJwt(c)
+	if jErr!= nil {
+		err := errors.NewBadRequestError("Failed to find user")
+		c.JSON(err.Status, err)
+		return
+	}
+
+	result, getErr := services.FetchActiveRequestsByPincode(pincode,user.ID)
 	if getErr != nil {
 		c.JSON(getErr.Status, getErr)
 		return

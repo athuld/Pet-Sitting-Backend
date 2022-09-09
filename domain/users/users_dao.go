@@ -16,7 +16,7 @@ var (
 	queryGetUserById        = "select id,username,email from users where id=$1"
 	queryAddUserDetails     = "insert into userdetails(user_id,gender,age,address,pincode,is_petsitter,is_dogwalker) values ($1,$2,$3,$4,$5,$6,$7)"
 	queryGetUserDetails     = "select * from userdetails where user_id=$1"
-	queryActiveRequestByPin = "select s.*,p.*,ud.address,ud.pincode from sitter_reqs s inner join pets p on s.pet_id=p.id inner join userdetails ud on s.user_id=ud.user_id where ud.pincode between $1 and $2;"
+	queryActiveRequestByPin = "select s.*,p.*,ud.address,ud.pincode from sitter_reqs s inner join pets p on s.pet_id=p.id inner join userdetails ud on s.user_id=ud.user_id where ud.pincode between $1 and $2 and s.user_id!=$3;"
 )
 
 func (user *User) Save() *errors.RestErr {
@@ -115,6 +115,7 @@ func (user *UserDetails) GetActiverRequestsByPinFromDB() (*[]sitterreq.SitterPet
 		queryActiveRequestByPin,
 		low_pin,
 		high_pin,
+        user.UserID,
 	)
 	if err != nil {
 		logger.Error.Println(err)
