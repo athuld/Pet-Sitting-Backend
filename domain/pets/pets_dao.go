@@ -9,7 +9,7 @@ import (
 )
 
 var (
-	queryInsertPet  = "insert into pets (owner_id,pet_img,pet_type,pet_gender,pet_weight,pet_desc) values ($1,$2,$3,$4,$5,$6) returning id,owner_id,pet_type,pet_gender,pet_weight,pet_desc"
+	queryInsertPet  = "insert into pets (owner_id,pet_img,pet_name,pet_type,pet_gender,pet_weight,pet_desc) values ($1,$2,$3,$4,$5,$6,$7) returning id,owner_id,pet_img,pet_name,pet_type,pet_gender,pet_weight,pet_desc"
 	queryDeletePet  = "delete from pets where id=$1"
 	queryGetAllPets = "select * from pets where owner_id=$1"
 )
@@ -20,6 +20,7 @@ func (pet *Pet) SavePetToDB() *errors.RestErr {
 		queryInsertPet,
 		pet.OwnerID,
 		pet.PetImg,
+        pet.PetName,
 		pet.PetType,
 		pet.PetGender,
 		pet.PetWeight,

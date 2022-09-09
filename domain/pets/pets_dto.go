@@ -4,6 +4,7 @@ type Pet struct {
 	ID        int64  `json:"id"`
 	OwnerID   int64  `json:"owner_id"`
 	PetImg    string `json:"pet_img"`
+	PetName   string `json:"pet_name"`
 	PetType   string `json:"pet_type"`
 	PetGender string `json:"pet_gender"`
 	PetWeight string `json:"pet_weight"`

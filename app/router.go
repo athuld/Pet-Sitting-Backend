@@ -2,6 +2,7 @@ package app
 
 import (
 	"pet-sitting-backend/controllers/pets"
+	sitterreqs "pet-sitting-backend/controllers/sitter_reqs"
 	"pet-sitting-backend/controllers/users"
 )
 
@@ -18,4 +19,11 @@ func mapUrls() {
 	router.POST("/api/user/pet/add_pet", pets.AddPet)
 	router.DELETE("/api/user/pet/delete_pet", pets.DeletePet)
 	router.GET("/api/user/pet/get_all", pets.GetAllPets)
+
+	// Sitter Requests
+	router.POST("/api/user/sitter_req/add_request", sitterreqs.AddRequest)
+	router.GET("/api/user/sitter_req/get_all/active", sitterreqs.GetActiveRequests)
+
+	// Sitters
+	router.GET("/api/user/sitter/get_all/by_pincode", users.GetActiveRequestsFromPincode)
 }

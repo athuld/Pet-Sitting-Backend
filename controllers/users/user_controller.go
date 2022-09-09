@@ -43,7 +43,7 @@ func Login(c *gin.Context) {
 	result, err := services.GetUser(user)
 	if err != nil {
 		c.JSON(err.Status, err)
-        return
+		return
 	}
 	claims := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.StandardClaims{
 		Issuer:    strconv.Itoa(int(result.ID)),
@@ -54,7 +54,7 @@ func Login(c *gin.Context) {
 	if signErr != nil {
 		err := errors.NewBadRequestError("login failed")
 		c.JSON(err.Status, err)
-        return
+		return
 	}
 	c.SetCookie("accessToken", token, 3600, "/", "localhost", false, true)
 	c.JSON(http.StatusOK, result)
@@ -73,21 +73,21 @@ func AddUserDetails(c *gin.Context) {
 	if err := c.ShouldBindJSON(&userDetails); err != nil {
 		err := errors.NewBadRequestError("Json is incorrect")
 		c.JSON(err.Status, err)
-        return
+		return
 	}
 
 	user, err := services.GetUserFromJwt(c)
 	if err != nil {
 		err := errors.NewBadRequestError("Failed to find user")
 		c.JSON(err.Status, err)
-        return
+		return
 	}
 	userDetails.UserID = user.ID
 	if err := userDetails.AddDetails(); err != nil {
-        log.Fatal(err)
+		log.Fatal(err)
 		err := errors.NewBadRequestError("Unable to insert values")
 		c.JSON(err.Status, err)
-        return
+		return
 	}
 	c.JSON(http.StatusOK, gin.H{"message": "userdetails inserted"})
 }
@@ -97,13 +97,29 @@ func GetUserDetails(c *gin.Context) {
 	if err != nil {
 		err := errors.NewBadRequestError("Query param error")
 		c.JSON(err.Status, err)
-        return
+		return
 	}
 	result, getErr := services.GetUserDetails(userID)
 	if getErr != nil {
 		err := errors.NewBadRequestError("Database error")
 		c.JSON(err.Status, err)
-        return
+		return
 	}
 	c.JSON(http.StatusOK, result)
+}
+
+func GetActiveRequestsFromPincode(c *gin.Context) {
+	pincode, err := strconv.Atoi(c.Query("pincode"))
+	if err != nil {
+		err := errors.NewBadRequestError("Query error")
+		c.JSON(err.Status, err)
+		return
+	}
+	result, getErr := services.FetchActiveRequestsByPincode(pincode)
+	if getErr != nil {
+		c.JSON(getErr.Status, getErr)
+		return
+	}
+	c.JSON(http.StatusOK, result)
+
 }

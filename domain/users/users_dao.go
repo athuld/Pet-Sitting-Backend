@@ -4,17 +4,19 @@ import (
 	"context"
 	"log"
 	"pet-sitting-backend/datasource"
+	sitterreq "pet-sitting-backend/domain/sitter_req"
 	"pet-sitting-backend/utils/errors"
 
 	"github.com/randallmlough/pgxscan"
 )
 
 var (
-	queryInsertUser     = "insert into users(username,email,password) values($1,$2,$3) returning id,username,email,password"
-	queryGetUserByEmail = "select id,username,email,password from users where email=$1"
-	queryGetUserById    = "select id,username,email from users where id=$1"
-	queryAddUserDetails = "insert into userdetails(user_id,gender,age,address,pincode,is_petsitter,is_dogwalker) values ($1,$2,$3,$4,$5,$6,$7)"
-	queryGetUserDetails = "select * from userdetails where user_id=$1"
+	queryInsertUser         = "insert into users(username,email,password) values($1,$2,$3) returning id,username,email,password"
+	queryGetUserByEmail     = "select id,username,email,password from users where email=$1"
+	queryGetUserById        = "select id,username,email from users where id=$1"
+	queryAddUserDetails     = "insert into userdetails(user_id,gender,age,address,pincode,is_petsitter,is_dogwalker) values ($1,$2,$3,$4,$5,$6,$7)"
+	queryGetUserDetails     = "select * from userdetails where user_id=$1"
+	queryActiveRequestByPin = "select s.*,p.*,ud.address,ud.pincode from sitter_reqs s inner join pets p on s.pet_id=p.id inner join userdetails ud on s.user_id=ud.user_id where ud.pincode between $1 and $2;"
 )
 
 func (user *User) Save() *errors.RestErr {
@@ -101,4 +103,23 @@ func (userDetails *UserDetails) GetDetailsByID() *errors.RestErr {
 		return errors.NewBadRequestError("Error is here")
 	}
 	return nil
+}
+
+func (user *UserDetails) GetActiverRequestsByPinFromDB() (*[]sitterreq.SitterPetsUsers, *errors.RestErr) {
+	low_pin := user.Pincode - 2
+	high_pin := user.Pincode + 2
+	result, err := datasource.Client.Query(
+		context.Background(),
+		queryActiveRequestByPin,
+		low_pin,
+		high_pin,
+	)
+	if err != nil {
+		return nil, errors.NewBadRequestError("Cannot fetch data")
+	}
+	var activer_reqs_pins []sitterreq.SitterPetsUsers
+	if err := pgxscan.NewScanner(result).Scan(&activer_reqs_pins); err != nil {
+		return nil, errors.NewBadRequestError("Failed to scan")
+	}
+	return &activer_reqs_pins, nil
 }

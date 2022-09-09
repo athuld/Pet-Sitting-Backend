@@ -2,6 +2,7 @@ package services
 
 import (
 	"os"
+	sitterreq "pet-sitting-backend/domain/sitter_req"
 	"pet-sitting-backend/domain/users"
 	"pet-sitting-backend/utils/errors"
 	"strconv"
@@ -81,6 +82,15 @@ func AddUserDetails(userDetails users.UserDetails) (*errors.RestErr){
 func GetUserDetails(userId int64) (*users.UserDetails,*errors.RestErr){
     result := &users.UserDetails{UserID: userId}
     if err:= result.GetDetailsByID();err!=nil{
+        return nil,err
+    }
+    return result,nil
+}
+
+func FetchActiveRequestsByPincode(pincode int)(*[]sitterreq.SitterPetsUsers,*errors.RestErr){
+    request:= &users.UserDetails{Pincode: pincode}
+    result,err := request.GetActiverRequestsByPinFromDB()
+    if err!=nil{
         return nil,err
     }
     return result,nil
