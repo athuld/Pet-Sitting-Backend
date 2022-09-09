@@ -2,8 +2,8 @@ package datasource
 
 import (
 	"context"
-	"log"
 	"os"
+	"pet-sitting-backend/utils/logger"
 
 	"github.com/jackc/pgx/v4"
 	"github.com/joho/godotenv"
@@ -16,7 +16,7 @@ var (
 func init() {
 	envErr := godotenv.Load(".env")
 	if envErr != nil {
-		log.Fatal("Error loading .env file")
+        logger.Error.Println(envErr)
 	}
 
 	var err error
@@ -24,5 +24,5 @@ func init() {
 	if err != nil {
 		panic(err)
 	}
-	log.Print("Database Connected Successfully")
+	logger.Info.Println("Database Connected Successfully")
 }

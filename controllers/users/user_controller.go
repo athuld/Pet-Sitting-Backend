@@ -1,7 +1,6 @@
 package users
 
 import (
-	"log"
 	"net/http"
 	"os"
 	"pet-sitting-backend/domain/users"
@@ -84,7 +83,6 @@ func AddUserDetails(c *gin.Context) {
 	}
 	userDetails.UserID = user.ID
 	if err := userDetails.AddDetails(); err != nil {
-		log.Fatal(err)
 		err := errors.NewBadRequestError("Unable to insert values")
 		c.JSON(err.Status, err)
 		return

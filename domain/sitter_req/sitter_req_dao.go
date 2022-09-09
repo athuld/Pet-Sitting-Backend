@@ -2,9 +2,9 @@ package sitterreq
 
 import (
 	"context"
-	"log"
 	"pet-sitting-backend/datasource"
 	"pet-sitting-backend/utils/errors"
+	"pet-sitting-backend/utils/logger"
 
 	"github.com/randallmlough/pgxscan"
 )
@@ -28,9 +28,11 @@ func (sitter_req *SitterReq) AddRequestToDB() *errors.RestErr {
 		sitter_req.BasePrize,
 	)
 	if err != nil {
+        logger.Error.Println(err)
 		return errors.NewBadRequestError("Cannot insert values")
 	}
 	if scanErr := pgxscan.NewScanner(result).Scan(&sitter_req); scanErr != nil {
+        logger.Error.Println(scanErr)
 		return errors.NewBadRequestError("Cannot scan struct")
 	}
 	return nil
@@ -39,6 +41,7 @@ func (sitter_req *SitterReq) AddRequestToDB() *errors.RestErr {
 func (sitter_req *SitterReq) DeleteRequestFromDB() *errors.RestErr {
 	_, err := datasource.Client.Exec(context.Background(), queryDeleteRequest, sitter_req.ReqId)
 	if err != nil {
+        logger.Error.Println(err)
 		return errors.NewBadRequestError("Cannot delete values")
 	}
 	return nil
@@ -51,11 +54,12 @@ func (sitter_req *SitterReq) GetActiveRequestsFromDB() (*[]SitterPets, *errors.R
 		sitter_req.UserId,
 	)
 	if err != nil {
+        logger.Error.Println(err)
 		return nil, errors.NewBadRequestError("Database error")
 	}
 	var activer_reqs []SitterPets
 	if err := pgxscan.NewScanner(result).Scan(&activer_reqs); err != nil {
-		log.Fatal(err)
+        logger.Error.Println(err)
 		return nil, errors.NewBadRequestError("Failed to scan")
 	}
 	return &activer_reqs, nil

@@ -2,10 +2,10 @@ package users
 
 import (
 	"context"
-	"log"
 	"pet-sitting-backend/datasource"
 	sitterreq "pet-sitting-backend/domain/sitter_req"
 	"pet-sitting-backend/utils/errors"
+	"pet-sitting-backend/utils/logger"
 
 	"github.com/randallmlough/pgxscan"
 )
@@ -29,7 +29,7 @@ func (user *User) Save() *errors.RestErr {
 	)
 	for result.Next() {
 		if getErr := result.Scan(&user.ID, &user.Username, &user.Email, &user.Password); getErr != nil {
-			log.Fatal(getErr)
+			logger.Error.Println(getErr)
 			return errors.NewInternalServerError("Databae error")
 		}
 	}
@@ -43,13 +43,13 @@ func (user *User) Save() *errors.RestErr {
 func (user *User) GetByEmail() *errors.RestErr {
 	result, err := datasource.Client.Query(context.Background(), queryGetUserByEmail, user.Email)
 	if err != nil {
-		log.Fatal(err)
+		logger.Error.Println(err)
 		return errors.NewInternalServerError("Database error")
 	}
 
 	for result.Next() {
 		if getErr := result.Scan(&user.ID, &user.Username, &user.Email, &user.Password); getErr != nil {
-			log.Fatal(getErr)
+			logger.Error.Println(getErr)
 			return errors.NewInternalServerError("Databae error")
 		}
 	}
@@ -59,11 +59,12 @@ func (user *User) GetByEmail() *errors.RestErr {
 func (user *User) GetById() *errors.RestErr {
 	result, err := datasource.Client.Query(context.Background(), queryGetUserById, user.ID)
 	if err != nil {
+		logger.Error.Println(err)
 		return errors.NewBadRequestError("database error")
 	}
 	for result.Next() {
 		if getErr := result.Scan(&user.ID, &user.Username, &user.Email); getErr != nil {
-			log.Fatal(getErr)
+			logger.Error.Println(getErr)
 			return errors.NewInternalServerError("Databae error")
 		}
 	}
@@ -83,7 +84,7 @@ func (userDetails *UserDetails) AddDetails() *errors.RestErr {
 		userDetails.IsDogwalker,
 	)
 	if err != nil {
-		log.Fatal(err)
+		logger.Error.Println(err)
 		return errors.NewBadRequestError("database error")
 	}
 	return nil
@@ -96,10 +97,11 @@ func (userDetails *UserDetails) GetDetailsByID() *errors.RestErr {
 		userDetails.UserID,
 	)
 	if err != nil {
+		logger.Error.Println(err)
 		return errors.NewBadRequestError("database error")
 	}
 	if getErr := pgxscan.NewScanner(result).Scan(&userDetails); getErr != nil {
-		log.Fatal(getErr)
+		logger.Error.Println(getErr)
 		return errors.NewBadRequestError("Error is here")
 	}
 	return nil
@@ -115,10 +117,12 @@ func (user *UserDetails) GetActiverRequestsByPinFromDB() (*[]sitterreq.SitterPet
 		high_pin,
 	)
 	if err != nil {
+		logger.Error.Println(err)
 		return nil, errors.NewBadRequestError("Cannot fetch data")
 	}
 	var activer_reqs_pins []sitterreq.SitterPetsUsers
 	if err := pgxscan.NewScanner(result).Scan(&activer_reqs_pins); err != nil {
+		logger.Error.Println(err)
 		return nil, errors.NewBadRequestError("Failed to scan")
 	}
 	return &activer_reqs_pins, nil

@@ -1,14 +1,14 @@
 package services
 
 import (
-	"log"
 	"pet-sitting-backend/domain/pets"
 	"pet-sitting-backend/utils/errors"
+	"pet-sitting-backend/utils/logger"
 )
 
 func SavePet(pet pets.Pet) (*pets.Pet, *errors.RestErr) {
 	if err := pet.SavePetToDB(); err != nil {
-		log.Fatal(err)
+		logger.Error.Println(err)
 		return nil, errors.NewBadRequestError("Database error")
 	}
 	return &pet, nil
@@ -17,7 +17,7 @@ func SavePet(pet pets.Pet) (*pets.Pet, *errors.RestErr) {
 func DeletePetByID(id int64) *errors.RestErr {
 	pet := &pets.Pet{ID: id}
 	if err := pet.DeletePetFromDB(); err != nil {
-		log.Fatal(err)
+		logger.Error.Println(err)
 		return errors.NewBadRequestError("Database error")
 	}
 	return nil
@@ -29,8 +29,8 @@ func FetchAllPets(owner_id int64) (*[]pets.Pet, *errors.RestErr) {
 
 	result, err := pet.GetAllPetsFromDB()
 	if err != nil {
-		log.Fatal(err)
-        return nil,errors.NewBadRequestError("Database error")
+		logger.Error.Println(err)
+		return nil, errors.NewBadRequestError("Database error")
 	}
 
 	return result, nil
