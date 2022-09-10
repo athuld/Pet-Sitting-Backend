@@ -14,7 +14,7 @@ var (
 	queryInsertUser         = "insert into users(username,email,password) values($1,$2,$3) returning id,username,email,password"
 	queryGetUserByEmail     = "select id,username,email,password from users where email=$1"
 	queryGetUserById        = "select id,username,email from users where id=$1"
-	queryAddUserDetails     = "insert into userdetails(user_id,gender,age,address,pincode,is_petsitter,is_dogwalker) values ($1,$2,$3,$4,$5,$6,$7)"
+	queryAddUserDetails     = "insert into userdetails(user_id,name,gender,age,phone,address,pincode,is_petsitter,is_dogwalker,avatar_img) values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)"
 	queryGetUserDetails     = "select * from userdetails where user_id=$1"
 	queryActiveRequestByPin = "select s.*,p.*,ud.address,ud.pincode from sitter_reqs s inner join pets p on s.pet_id=p.id inner join userdetails ud on s.user_id=ud.user_id where ud.pincode between $1 and $2 and s.user_id!=$3;"
 )
@@ -76,12 +76,15 @@ func (userDetails *UserDetails) AddDetails() *errors.RestErr {
 		context.Background(),
 		queryAddUserDetails,
 		userDetails.UserID,
+        userDetails.Name,
 		userDetails.Gender,
 		userDetails.Age,
+        userDetails.Phone,
 		userDetails.Address,
 		userDetails.Pincode,
 		userDetails.IsPetsitter,
 		userDetails.IsDogwalker,
+        userDetails.AvatarIMG,
 	)
 	if err != nil {
 		logger.Error.Println(err)

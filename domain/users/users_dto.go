@@ -15,12 +15,15 @@ type User struct {
 type UserDetails struct {
 	ID          int64  `json:"id"`
 	UserID      int64  `json:"user_id"`
+	Name        string `json:"name"`
 	Gender      string `json:"gender"`
 	Age         int    `json:"age"`
+	Phone       int64  `json:"phone"`
 	Address     string `json:"address"`
 	Pincode     int    `json:"pincode"`
 	IsPetsitter bool   `json:"is_petsitter"`
 	IsDogwalker bool   `json:"is_dogwalker"`
+	AvatarIMG   string `json:"avatar_img"`
 }
 
 func (user *User) ValidateUser() *errors.RestErr {

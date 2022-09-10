@@ -6,6 +6,7 @@ import (
 	"pet-sitting-backend/domain/users"
 	"pet-sitting-backend/services"
 	"pet-sitting-backend/utils/errors"
+	"pet-sitting-backend/utils/logger"
 	"strconv"
 	"time"
 
@@ -55,7 +56,7 @@ func Login(c *gin.Context) {
 		c.JSON(err.Status, err)
 		return
 	}
-	c.SetCookie("accessToken", token, 3600, "/", "localhost", false, true)
+	c.SetCookie("accessToken", token, 3600, "/","localhost", false, true)
 	c.JSON(http.StatusOK, result)
 }
 
@@ -77,6 +78,7 @@ func AddUserDetails(c *gin.Context) {
 
 	user, err := services.GetUserFromJwt(c)
 	if err != nil {
+        logger.Error.Println(err)
 		err := errors.NewBadRequestError("Failed to find user")
 		c.JSON(err.Status, err)
 		return
@@ -91,13 +93,13 @@ func AddUserDetails(c *gin.Context) {
 }
 
 func GetUserDetails(c *gin.Context) {
-	userID, err := strconv.ParseInt(c.Query("userID"), 10, 64)
+	user, err := services.GetUserFromJwt(c)
 	if err != nil {
-		err := errors.NewBadRequestError("Query param error")
+		err := errors.NewBadRequestError("Failed to find user")
 		c.JSON(err.Status, err)
 		return
 	}
-	result, getErr := services.GetUserDetails(userID)
+	result, getErr := services.GetUserDetails(user.ID)
 	if getErr != nil {
 		err := errors.NewBadRequestError("Database error")
 		c.JSON(err.Status, err)

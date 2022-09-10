@@ -5,6 +5,7 @@ import (
 	sitterreq "pet-sitting-backend/domain/sitter_req"
 	"pet-sitting-backend/domain/users"
 	"pet-sitting-backend/utils/errors"
+	"pet-sitting-backend/utils/logger"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -45,6 +46,7 @@ func GetUser(user users.User) (*users.User, *errors.RestErr) {
 func GetUserFromJwt(c *gin.Context) (*users.User, *errors.RestErr) {
 	cookie, err := c.Cookie("accessToken")
 	if err != nil {
+        logger.Error.Println(err)
 		return nil, errors.NewBadRequestError("Cannot get cookie")
 	}
 	token, err := jwt.ParseWithClaims(

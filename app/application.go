@@ -12,10 +12,9 @@ var (
 )
 
 func StartApplication() {
-	mapUrls()
 	router.Use(cors.New(cors.Config{
         AllowOrigins:     []string{"http://localhost:5173"},
-		AllowMethods:     []string{"GET","POST","PATCH","DELETE"},
+		AllowMethods:     []string{"GET", "POST"},
 		AllowHeaders:     []string{"Content-Type"},
 		ExposeHeaders:    []string{"Content-Length"},
 		AllowCredentials: true,
@@ -24,5 +23,6 @@ func StartApplication() {
 		},
 		MaxAge: 12 * time.Hour,
 	}))
+	mapUrls()
 	router.Run(":8081")
 }
