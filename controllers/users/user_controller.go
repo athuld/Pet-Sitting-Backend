@@ -56,7 +56,7 @@ func Login(c *gin.Context) {
 		c.JSON(err.Status, err)
 		return
 	}
-	c.SetCookie("accessToken", token, 3600, "/","localhost", false, true)
+	c.SetCookie("accessToken", token, 3600, "/", "localhost", false, true)
 	c.JSON(http.StatusOK, result)
 }
 
@@ -78,7 +78,7 @@ func AddUserDetails(c *gin.Context) {
 
 	user, err := services.GetUserFromJwt(c)
 	if err != nil {
-        logger.Error.Println(err)
+		logger.Error.Println(err)
 		err := errors.NewBadRequestError("Failed to find user")
 		c.JSON(err.Status, err)
 		return
@@ -116,13 +116,13 @@ func GetActiveRequestsFromPincode(c *gin.Context) {
 		return
 	}
 	user, jErr := services.GetUserFromJwt(c)
-	if jErr!= nil {
+	if jErr != nil {
 		err := errors.NewBadRequestError("Failed to find user")
 		c.JSON(err.Status, err)
 		return
 	}
 
-	result, getErr := services.FetchActiveRequestsByPincode(pincode,user.ID)
+	result, getErr := services.FetchActiveRequestsByPincode(pincode, user.ID)
 	if getErr != nil {
 		c.JSON(getErr.Status, getErr)
 		return

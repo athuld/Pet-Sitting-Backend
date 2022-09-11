@@ -36,6 +36,7 @@ func GetUser(user users.User) (*users.User, *errors.RestErr) {
 		return nil, err
 	}
 	if err := bcrypt.CompareHashAndPassword([]byte(result.Password), []byte(user.Password)); err != nil {
+        logger.Error.Println(err)
 		return nil, errors.NewBadRequestError("Passwords do not match")
 	}
 

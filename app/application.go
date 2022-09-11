@@ -1,8 +1,6 @@
 package app
 
 import (
-	"time"
-
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
@@ -12,17 +10,10 @@ var (
 )
 
 func StartApplication() {
-	router.Use(cors.New(cors.Config{
-        AllowOrigins:     []string{"http://localhost:5173"},
-		AllowMethods:     []string{"GET", "POST"},
-		AllowHeaders:     []string{"Content-Type"},
-		ExposeHeaders:    []string{"Content-Length"},
-		AllowCredentials: true,
-		AllowOriginFunc: func(origin string) bool {
-			return origin == "http://localhost:5173"
-		},
-		MaxAge: 12 * time.Hour,
-	}))
+	corsConfig := cors.DefaultConfig()
+	corsConfig.AllowOrigins = []string{"http://localhost:5173"}
+	corsConfig.AllowCredentials = true
+	router.Use(cors.New(corsConfig))
 	mapUrls()
 	router.Run(":8081")
 }
