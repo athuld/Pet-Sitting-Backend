@@ -17,8 +17,10 @@ type SitterReq struct {
 }
 
 type UserDetails struct {
-	Address     string `json:"address"`
-	Pincode     int    `json:"pincode"`
+	Name    string `json:"name"`
+	Address string `json:"address"`
+	Pincode int    `json:"pincode"`
+	Phone   int64  `json:"phone"`
 }
 
 type SitterPets struct{

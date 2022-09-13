@@ -47,13 +47,29 @@ func GetActiveRequests(c *gin.Context) {
 		return
 	}
 
-	if err := c.ShouldBindJSON(&sitter_req); err != nil {
-		err := errors.NewBadRequestError("Json error")
+	sitter_req.UserId = user.ID
+	result, getErr := services.FetchActiveRequests(sitter_req)
+	if getErr != nil {
+		c.JSON(getErr.Status, getErr)
+		return
+	}
+
+	c.JSON(http.StatusOK, result)
+}
+
+
+func GetInActiveRequests(c *gin.Context) {
+	var sitter_req sitterreq.SitterReq
+
+	user, err := services.GetUserFromJwt(c)
+	if err != nil {
+		err := errors.NewBadRequestError("Unable to decrypt")
 		c.JSON(err.Status, err)
 		return
 	}
+
 	sitter_req.UserId = user.ID
-	result, getErr := services.FetchActiveRequests(sitter_req)
+	result, getErr := services.FetchInActiveRequests(sitter_req)
 	if getErr != nil {
 		c.JSON(getErr.Status, getErr)
 		return

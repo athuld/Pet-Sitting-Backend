@@ -24,6 +24,8 @@ func mapUrls() {
 	// Sitter Requests
 	router.POST("/api/user/sitter_req/add_request", sitterreqs.AddRequest)
 	router.GET("/api/user/sitter_req/get_all/active", sitterreqs.GetActiveRequests)
+	router.GET("/api/user/sitter_req/get_all/inactive", sitterreqs.GetInActiveRequests)
+	router.DELETE("/api/user/sitter_req/delete_request", sitterreqs.DeleteRequest)
 
 	// Sitters
 	router.GET("/api/user/sitter/get_all/by_pincode", users.GetActiveRequestsFromPincode)

@@ -56,7 +56,7 @@ func Login(c *gin.Context) {
 		c.JSON(err.Status, err)
 		return
 	}
-	c.SetCookie("accessToken", token, 3600, "/", "localhost", false, true)
+	c.SetCookie("accessToken", token, 360000, "/", "localhost", false, true)
 	c.JSON(http.StatusOK, result)
 }
 
