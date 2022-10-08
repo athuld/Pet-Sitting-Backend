@@ -2,6 +2,7 @@ package app
 
 import (
 	"pet-sitting-backend/controllers/pets"
+	"pet-sitting-backend/controllers/reviews"
 	sitterreqs "pet-sitting-backend/controllers/sitter_reqs"
 	sitterresps "pet-sitting-backend/controllers/sitter_resps"
 	"pet-sitting-backend/controllers/users"
@@ -24,6 +25,7 @@ func mapUrls() {
 	// Sitter Requests
 	router.POST("/api/user/sitter_req/add_request", sitterreqs.AddRequest)
 	router.GET("/api/user/sitter_req/get_all/active", sitterreqs.GetActiveRequests)
+	router.GET("/api/user/sitter_req/get_all/accepted", sitterreqs.GetAcceptedRequests)
 	router.GET("/api/user/sitter_req/get_all/inactive", sitterreqs.GetInActiveRequests)
 	router.DELETE("/api/user/sitter_req/delete_request", sitterreqs.DeleteRequest)
 
@@ -34,4 +36,11 @@ func mapUrls() {
     router.POST("/api/user/sitter/response",sitterresps.AddResponse)
     router.GET("/api/user/sitter/responses/by_id",sitterresps.GetResponsesById)
     router.PATCH("/api/user/sitter/response/accept",sitterresps.AcceptResponse)
+
+    //Reviews
+    router.POST("/api/user/review/add_review",reviews.AddReview)
+    router.GET("/api/user/review/get_review/owner",reviews.GetReviewForOwner)
+    router.GET("/api/user/review/get_review/sitter",reviews.GetReviewsForSitter)
+    router.GET("/api/user/review/get_review/sitter/by_id",reviews.GetReviewsForSitterByID)
+    router.GET("/api/user/review/get_review/all",reviews.GetAllReviews)
 }

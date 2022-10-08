@@ -23,6 +23,15 @@ func FetchActiveRequests(
 	return result, nil
 }
 
+func FetchAcceptedRequests(sitter_req sitterreq.SitterReq) (*[]sitterreq.AcceptedRequests, *errors.RestErr) {
+	request := &sitterreq.SitterReq{SitterId: sitter_req.SitterId}
+	result, err := request.GetAcceptedRequestsFromDB()
+	if err != nil {
+		return nil, err
+	}
+	return result, nil
+}
+
 func FetchInActiveRequests(
 	sitter_req sitterreq.SitterReq,
 ) (*[]sitterreq.SitterPetsUsers, *errors.RestErr) {
