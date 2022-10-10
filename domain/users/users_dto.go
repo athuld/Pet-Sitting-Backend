@@ -22,8 +22,20 @@ type UserDetails struct {
 	Address     string `json:"address"`
 	Pincode     int    `json:"pincode"`
 	IsPetsitter bool   `json:"is_petsitter"`
-	IsDogwalker bool   `json:"is_dogwalker"`
 	AvatarIMG   string `json:"avatar_img"`
+}
+
+type FullUserDetails struct {
+	UserID      int64  `json:"user_id"`
+	Username string `json:"username"`
+    Name        string `json:"name"`
+	Email    string `json:"email"`
+	Gender      string `json:"gender"`
+	Age         int    `json:"age"`
+    Address     string `json:"address"`
+    Pincode     int    `json:"pincode"`
+	Phone       int64  `json:"phone"`
+	IsPetsitter bool   `json:"is_petsitter"`
 }
 
 func (user *User) ValidateUser() *errors.RestErr {

@@ -13,7 +13,7 @@ var(
     queryInsertReview = "insert into reviews(sitter_id,user_id,rating,review) values ($1,$2,$3,$4)"
     queryGetReviewsForOwner= "select r.*,name,address,pincode,phone,avatar_img from reviews r inner join userdetails ud on r.sitter_id=ud.user_id where r.user_id=$1 and sitter_id=$2"
     queryGetAllReviewsBySitter= "select r.*,name,address,pincode,phone,avatar_img from reviews r inner join userdetails ud on r.user_id=ud.user_id where sitter_id=$1"
-    queryGetAllReviews="select r.sitter_id,name,address,pincode,phone,avatar_img,cast((avg(rating)) as decimal(10,1)) as avg_rating from reviews r inner join userdetails ud on r.sitter_id=ud.user_id group by r.sitter_id,name,address,phone,avatar_img,pincode"
+    queryGetAllReviews="select r.sitter_id,name,address,pincode,phone,avatar_img,cast((avg(rating)) as decimal(10,1)) as avg_rating from reviews r inner join userdetails ud on r.sitter_id=ud.user_id group by r.sitter_id,name,address,phone,avatar_img,pincode order by avg_rating desc"
 )
 
 func (review *Reviews) InsertReviewToDB() (*errors.RestErr){
@@ -31,6 +31,7 @@ func (review *Reviews) GetReviewsForOwnerFromDB() (*ReviewsWithSitter,*errors.Re
     }
     var reviewData ReviewsWithSitter
     if err:= pgxscan.NewScanner(result).Scan(&reviewData);err!=nil{
+        logger.Error.Println(err)
         return nil,errors.NewBadRequestError("Failed to scan")
     }
     return &reviewData,nil
@@ -44,6 +45,7 @@ func (review *Reviews) GetAllReviewsBySitter() (*[]ReviewsWithSitter,*errors.Res
     }
     var reviewData []ReviewsWithSitter
     if err:= pgxscan.NewScanner(result).Scan(&reviewData);err!=nil{
+        logger.Error.Println(err)
         return nil,errors.NewBadRequestError("Failed to scan")
     }
     return &reviewData,nil

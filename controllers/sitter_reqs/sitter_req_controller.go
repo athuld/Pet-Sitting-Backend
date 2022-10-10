@@ -113,3 +113,13 @@ func DeleteRequest(c *gin.Context) {
 		return
 	}
 }
+
+func GetAllRequestsForAdmin(c *gin.Context){
+    var sitter_req sitterreq.SitterReq
+    result,err:= sitter_req.GetAllRequests()
+    if err!=nil{
+        c.JSON(err.Status,err)
+        return
+    }
+    c.JSON(http.StatusOK,result)
+}

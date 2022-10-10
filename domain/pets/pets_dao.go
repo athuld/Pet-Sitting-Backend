@@ -12,6 +12,7 @@ var (
 	queryInsertPet  = "insert into pets (owner_id,pet_img,pet_name,pet_type,pet_gender,pet_weight,pet_desc) values ($1,$2,$3,$4,$5,$6,$7) returning id,owner_id,pet_img,pet_name,pet_type,pet_gender,pet_weight,pet_desc"
 	queryDeletePet  = "delete from pets where id=$1"
 	queryGetAllPets = "select * from pets where owner_id=$1"
+	queryGetAllPetsForAdmin = "select * from pets"
 )
 
 func (pet *Pet) SavePetToDB() *errors.RestErr {
@@ -45,6 +46,18 @@ func (pet *Pet) DeletePetFromDB() *errors.RestErr {
 
 func (pet *Pet) GetAllPetsFromDB() (*[]Pet, *errors.RestErr) {
 	result, err := datasource.Client.Query(context.Background(), queryGetAllPets, pet.OwnerID)
+	var pets []Pet
+	if err != nil {
+		return nil, errors.NewBadRequestError("Cannot fetch data")
+	}
+	if err := pgxscan.NewScanner(result).Scan(&pets); err != nil {
+		return nil, errors.NewBadRequestError("Failed to scan data")
+	}
+	return &pets, nil
+}
+
+func (pet *Pet) GetAllPetsForAdmin() (*[]Pet,*errors.RestErr){
+	result, err := datasource.Client.Query(context.Background(), queryGetAllPetsForAdmin)
 	var pets []Pet
 	if err != nil {
 		return nil, errors.NewBadRequestError("Cannot fetch data")

@@ -43,4 +43,9 @@ func mapUrls() {
     router.GET("/api/user/review/get_review/sitter",reviews.GetReviewsForSitter)
     router.GET("/api/user/review/get_review/sitter/by_id",reviews.GetReviewsForSitterByID)
     router.GET("/api/user/review/get_review/all",reviews.GetAllReviews)
+
+    // Admin
+    router.GET("/api/admin/get/all_users",users.GetAllUsers)
+    router.GET("/api/admin/get/all_requests",sitterreqs.GetAllRequestsForAdmin)
+    router.GET("/api/admin/get/all_pets",pets.GetAllPetsAdmin)
 }

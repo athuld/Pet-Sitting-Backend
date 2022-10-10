@@ -75,3 +75,15 @@ func GetAllPets(c *gin.Context) {
 
     c.JSON(http.StatusOK,result)
 }
+
+func GetAllPetsAdmin(c *gin.Context) {
+    var pets pets.Pet
+
+    result,getErr:= pets.GetAllPetsForAdmin()
+    if getErr!=nil{
+        c.JSON(getErr.Status,getErr)
+        return
+    }
+
+    c.JSON(http.StatusOK,result)
+}

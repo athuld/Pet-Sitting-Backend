@@ -130,3 +130,13 @@ func GetActiveRequestsFromPincode(c *gin.Context) {
 	c.JSON(http.StatusOK, result)
 
 }
+
+func GetAllUsers(c *gin.Context){
+    var user users.User
+    result,err:= user.GetAllUsers()
+    if err!=nil{
+        c.JSON(err.Status,err)
+        return
+    }
+    c.JSON(http.StatusOK,result)
+}

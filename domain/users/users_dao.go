@@ -14,9 +14,10 @@ var (
 	queryInsertUser         = "insert into users(username,email,password) values($1,$2,$3) returning id,username,email,password"
 	queryGetUserByEmail     = "select id,username,email,password from users where email=$1"
 	queryGetUserById        = "select id,username,email from users where id=$1"
-	queryAddUserDetails     = "insert into userdetails(user_id,name,gender,age,phone,address,pincode,is_petsitter,is_dogwalker,avatar_img) values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)"
+	queryAddUserDetails     = "insert into userdetails(user_id,name,gender,age,phone,address,pincode,is_petsitter,avatar_img) values ($1,$2,$3,$4,$5,$6,$7,$8,$9)"
 	queryGetUserDetails     = "select * from userdetails where user_id=$1"
 	queryActiveRequestByPin = "select s.*,p.*,ud.address,ud.pincode,ud.phone from sitter_reqs s inner join pets p on s.pet_id=p.id inner join userdetails ud on s.user_id=ud.user_id where ud.pincode between $1 and $2 and s.user_id!=$3 and s.req_id not in (select sitter_req_id from sitter_resps where sitter_id=$3);"
+    queryGetAllUsers        = "select user_id,username,name,email,gender,age,address,pincode,phone,is_petsitter from users u inner join userdetails ud on u.id=ud.user_id"
 )
 
 func (user *User) Save() *errors.RestErr {
@@ -83,7 +84,6 @@ func (userDetails *UserDetails) AddDetails() *errors.RestErr {
 		userDetails.Address,
 		userDetails.Pincode,
 		userDetails.IsPetsitter,
-		userDetails.IsDogwalker,
         userDetails.AvatarIMG,
 	)
 	if err != nil {
@@ -130,4 +130,19 @@ func (user *UserDetails) GetActiverRequestsByPinFromDB() (*[]sitterreq.SitterPet
 		return nil, errors.NewBadRequestError("Failed to scan")
 	}
 	return &activer_reqs_pins, nil
+}
+
+func (user *User) GetAllUsers() (*[]FullUserDetails,*errors.RestErr){
+    result,err:= datasource.Client.Query(context.Background(),queryGetAllUsers)
+	if err != nil {
+		logger.Error.Println(err)
+		return nil, errors.NewBadRequestError("Cannot fetch data")
+	}
+    var allUsers []FullUserDetails
+	if err := pgxscan.NewScanner(result).Scan(&allUsers); err != nil {
+		logger.Error.Println(err)
+		return nil, errors.NewBadRequestError("Failed to scan")
+	}
+	return &allUsers, nil
+
 }
