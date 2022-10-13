@@ -2,19 +2,21 @@ package sitterreq
 
 import (
 	"pet-sitting-backend/domain/pets"
+
+	"github.com/jackc/pgtype"
 )
 
 type SitterReq struct {
-	ReqId        int64  `json:"req_id"`
-	PetId        int64  `json:"pet_id"`
-	UserId       int64  `json:"user_id"`
-	Date         string `json:"date"`
-	Time         string `json:"time"`
-	Instructions string `json:"instructions"`
-	BasePrize    int    `json:"base_prize"`
-	IsAccepted   bool   `json:"is_accepted"`
-	SitterId     int64  `json:"sitter_id"`
-	IsPersonal   bool   `json:"is_personal"`
+	ReqId        int64       `json:"req_id"`
+	PetId        int64       `json:"pet_id"`
+	UserId       int64       `json:"user_id"`
+	Date         pgtype.Date `json:"date"`
+	Time         string      `json:"time"`
+	Instructions string      `json:"instructions"`
+	BasePrize    int         `json:"base_prize"`
+	IsAccepted   bool        `json:"is_accepted"`
+	SitterId     int64       `json:"sitter_id"`
+	IsPersonal   bool        `json:"is_personal"`
 }
 
 type UserDetails struct {
@@ -38,8 +40,8 @@ type SitterPetsUsers struct {
 
 type AcceptedRequests struct {
 	UserDetails
-	PetImg string `json:"pet_img"`
-	Date   string `json:"date"`
-	Time   string `json:"time"`
-	Prize  int    `json:"prize"`
+	PetImg string      `json:"pet_img"`
+	Date   pgtype.Date `json:"date"`
+	Time   string      `json:"time"`
+	Prize  int         `json:"prize"`
 }

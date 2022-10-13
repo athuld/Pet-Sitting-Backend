@@ -5,6 +5,7 @@ import (
 	"pet-sitting-backend/controllers/reviews"
 	sitterreqs "pet-sitting-backend/controllers/sitter_reqs"
 	sitterresps "pet-sitting-backend/controllers/sitter_resps"
+	"pet-sitting-backend/controllers/transactions"
 	"pet-sitting-backend/controllers/users"
 )
 
@@ -44,8 +45,17 @@ func mapUrls() {
     router.GET("/api/user/review/get_review/sitter/by_id",reviews.GetReviewsForSitterByID)
     router.GET("/api/user/review/get_review/all",reviews.GetAllReviews)
 
+    // Transactions
+    router.POST("/api/user/transaction/add",transactions.AddNewTransaction)
+    router.GET("/api/user/transaction/get/general_expense",transactions.GetGeneralExpense)
+    router.POST("/api/user/transaction/get/custom_expense",transactions.GetCustomExpense)
+    router.GET("/api/user/transaction/get/general_earnings",transactions.GetGeneralEarnings)
+    router.POST("/api/user/transaction/get/custom_earnings",transactions.GetCustomEranings)
+
     // Admin
     router.GET("/api/admin/get/all_users",users.GetAllUsers)
     router.GET("/api/admin/get/all_requests",sitterreqs.GetAllRequestsForAdmin)
     router.GET("/api/admin/get/all_pets",pets.GetAllPetsAdmin)
+    router.GET("/api/admin/get/all_transactions",transactions.GetAllTransactions)
+    router.GET("/api/admin/get/revenue_info",transactions.GetRevenueInfo)
 }

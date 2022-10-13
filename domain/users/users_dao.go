@@ -16,7 +16,7 @@ var (
 	queryGetUserById        = "select id,username,email from users where id=$1"
 	queryAddUserDetails     = "insert into userdetails(user_id,name,gender,age,phone,address,pincode,is_petsitter,avatar_img) values ($1,$2,$3,$4,$5,$6,$7,$8,$9)"
 	queryGetUserDetails     = "select * from userdetails where user_id=$1"
-	queryActiveRequestByPin = "select s.*,p.*,ud.address,ud.pincode,ud.phone from sitter_reqs s inner join pets p on s.pet_id=p.id inner join userdetails ud on s.user_id=ud.user_id where ud.pincode between $1 and $2 and s.user_id!=$3 and s.req_id not in (select sitter_req_id from sitter_resps where sitter_id=$3);"
+	queryActiveRequestByPin = "select s.*,p.*,ud.address,ud.pincode,ud.phone from sitter_reqs s inner join pets p on s.pet_id=p.id inner join userdetails ud on s.user_id=ud.user_id where ud.pincode between $1 and $2 and s.user_id!=$3 and s.req_id not in (select sitter_req_id from sitter_resps where sitter_id=$3) and is_accepted=false;"
     queryGetAllUsers        = "select user_id,username,name,email,gender,age,address,pincode,phone,is_petsitter from users u inner join userdetails ud on u.id=ud.user_id"
 )
 

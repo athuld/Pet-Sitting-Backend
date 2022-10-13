@@ -10,7 +10,7 @@ import (
 )
 
 var (
-	queryAddRequest      = "insert into sitter_reqs (pet_id,user_id,date,time,instructions,base_prize) values ($1,$2,$3,$4,$5,$6) returning req_id,pet_id,user_id,date,time,instructions,base_prize,is_accepted"
+	queryAddRequest      = "insert into sitter_reqs (pet_id,user_id,date,time,instructions,base_prize,is_personal) values ($1,$2,$3,$4,$5,$6,$7) returning req_id,pet_id,user_id,date,time,instructions,base_prize,is_accepted"
 	queryDeleteRequest   = "delete from sitter_reqs where req_id=$1"
 	queryActiveRequest   = "select * from sitter_reqs s inner join pets p on s.pet_id=p.id where user_id=$1 and is_accepted=false;"
 	queryInActiveRequest = "select s.*,p.*,ud.name,ud.phone,ud.pincode,ud.avatar_img,ud.address from sitter_reqs s inner join pets p on s.pet_id=p.id inner join userdetails ud on ud.user_id=s.sitter_id where s.user_id=$1 and is_accepted=true;"
@@ -29,6 +29,7 @@ func (sitter_req *SitterReq) AddRequestToDB() *errors.RestErr {
 		sitter_req.Time,
 		sitter_req.Instructions,
 		sitter_req.BasePrize,
+        sitter_req.IsPersonal,
 	)
 	if err != nil {
 		logger.Error.Println(err)
